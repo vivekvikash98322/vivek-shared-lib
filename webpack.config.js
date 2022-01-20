@@ -1,13 +1,17 @@
+const  webpack =  require('webpack');
 const path = require('path')
+
+const ASSET_PATH = process.env.ASSET_PATH || '/';
 
 module.exports = {
     entry: path.resolve(__dirname, './src/index.tsx'),
     mode: "production",
     output: {
+        publicPath: ASSET_PATH,
         path: path.resolve(__dirname, "dist"),
         filename: "index.js",
         libraryTarget: "umd",
-        library: "payadm-shared-lib"
+        library: "vivek-shared-lib"
     },
     module: {
         rules: [
@@ -34,5 +38,11 @@ module.exports = {
     },
     externals: {
         react: "react"
-    }
+    },
+    plugins: [
+        // This makes it possible for us to safely use env vars on our code
+        new webpack.DefinePlugin({
+          'process.env.ASSET_PATH': JSON.stringify(ASSET_PATH),
+        }),
+      ]
 }
